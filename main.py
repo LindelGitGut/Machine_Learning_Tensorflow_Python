@@ -1,11 +1,12 @@
-import cv2 as cv
+#import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
 import keras
 from keras import layers
-from keras.datasets import mnist
-#from tensorflow.python.keras import layers, models
+
 #from keras.datasets import mnist
+#from tensorflow.python.keras import layers, models
+#from keras.datasets import mnistpip
 
 # erstelle datenset mit training images und training labels sowie testing images und testing labels, diese werden vom Tensorflow bereitgestellt
 #training und testing img sind einfache arrays of pixels
@@ -21,7 +22,7 @@ training_img, testing_img = training_img / 255, testing_img / 255
 
 class_names = ["Plane", "Car", "Bird", "Cat", "Deer", "Dog", "Frog", "Horse", "Ship", "Truck"]
 
-# erstellen eines grids welches 16 Bilder itriert
+# erstellen eines grids welches 16 Bilder iteriert
 
 for i in range(16):
     #erstellt ein 4x4 grid, mit jeder iteration wird ien element im grid befüllt
@@ -97,7 +98,15 @@ model.compile(optimizer="adam",loss='sparse_categorical_crossentropy', metrics=[
 model.fit(training_img, training_label, epochs=100, validation_data=(testing_img, testing_label))
 
 
+img_path = 'test.jpg'
+img = keras.preprocessing.image.load_img(img_path, target_size=(32, 32))
 
-
-
+img_array = keras.preprocessing.image.img_to_array(img)
+img_array = img_array / 255.0
+img_array = np.expand_dims(img_array, axis=0)
 #
+
+predictions = model.predict(img_array)
+predicted_class = np.argmax(predictions[0])
+
+print(f'Die vorhergesagte Klasse ist: {class_names[predicted_class]}')
